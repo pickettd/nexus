@@ -29,6 +29,11 @@ const {
       OLLAMA_AGENT_MODEL: '',
       OLLAMA_WORK_MODEL: '',
       OLLAMA_EMBEDDING_MODEL: '',
+      OPENAI_BASE_URL: '',
+      OPENAI_ROUTER_MODEL: '',
+      OPENAI_AGENT_MODEL: '',
+      OPENAI_WORK_MODEL: '',
+      OPENAI_EMBEDDING_MODEL: '',
       LOG_LEVEL: 'info',
       NODE_ENV: 'test',
     } as Record<string, string>,
@@ -60,6 +65,11 @@ describe('createLLMProvider', () => {
     mockConfig.OLLAMA_AGENT_MODEL = '';
     mockConfig.OLLAMA_WORK_MODEL = '';
     mockConfig.OLLAMA_EMBEDDING_MODEL = '';
+    mockConfig.OPENAI_BASE_URL = '';
+    mockConfig.OPENAI_ROUTER_MODEL = '';
+    mockConfig.OPENAI_AGENT_MODEL = '';
+    mockConfig.OPENAI_WORK_MODEL = '';
+    mockConfig.OPENAI_EMBEDDING_MODEL = '';
   });
 
   it('creates Gemini provider by default', () => {
@@ -76,7 +86,50 @@ describe('createLLMProvider', () => {
   it('creates OpenAI provider when configured', () => {
     mockConfig.LLM_PROVIDER = 'openai';
     createLLMProvider();
-    expect(mockOpenAIProvider).toHaveBeenCalledWith('test-api-key');
+    expect(mockOpenAIProvider).toHaveBeenCalledWith('test-api-key', undefined, undefined);
+  });
+
+  it('creates OpenAI provider with custom base URL', () => {
+    mockConfig.LLM_PROVIDER = 'openai';
+    mockConfig.OPENAI_BASE_URL = 'http://openai-compat.internal/v1';
+    createLLMProvider();
+    expect(mockOpenAIProvider).toHaveBeenCalledWith(
+      'test-api-key',
+      undefined,
+      'http://openai-compat.internal/v1',
+    );
+  });
+
+  it('creates OpenAI provider with configured model overrides', () => {
+    mockConfig.LLM_PROVIDER = 'openai';
+    mockConfig.OPENAI_ROUTER_MODEL = 'gpt-4.1-mini';
+    mockConfig.OPENAI_AGENT_MODEL = 'gpt-4.1';
+    mockConfig.OPENAI_WORK_MODEL = 'o3';
+    mockConfig.OPENAI_EMBEDDING_MODEL = 'text-embedding-3-small';
+    createLLMProvider();
+    expect(mockOpenAIProvider).toHaveBeenCalledWith(
+      'test-api-key',
+      {
+        ROUTER: 'gpt-4.1-mini',
+        AGENT: 'gpt-4.1',
+        WORK: 'o3',
+        EMBEDDING: 'text-embedding-3-small',
+      },
+      undefined,
+    );
+  });
+
+  it('creates OpenAI provider with base URL and model overrides combined', () => {
+    mockConfig.LLM_PROVIDER = 'openai';
+    mockConfig.OPENAI_BASE_URL = 'http://localhost:4000/v1';
+    mockConfig.OPENAI_ROUTER_MODEL = 'qwen/qwen3-32b';
+    mockConfig.OPENAI_AGENT_MODEL = 'qwen/qwen3-235b';
+    createLLMProvider();
+    expect(mockOpenAIProvider).toHaveBeenCalledWith(
+      'test-api-key',
+      { ROUTER: 'qwen/qwen3-32b', AGENT: 'qwen/qwen3-235b' },
+      'http://localhost:4000/v1',
+    );
   });
 
   it('creates OpenRouter with correct base URL', () => {

@@ -69,6 +69,11 @@ const envSchema = z.object({
   OLLAMA_AGENT_MODEL: z.string().optional(),
   OLLAMA_WORK_MODEL: z.string().optional(),
   OLLAMA_EMBEDDING_MODEL: z.string().optional(),
+  OPENAI_BASE_URL: z.string().optional(),
+  OPENAI_ROUTER_MODEL: z.string().optional(),
+  OPENAI_AGENT_MODEL: z.string().optional(),
+  OPENAI_WORK_MODEL: z.string().optional(),
+  OPENAI_EMBEDDING_MODEL: z.string().optional(),
 
   // Local execution backends
   EXECUTION_BACKEND: z.string().default('noop'),

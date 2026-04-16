@@ -18,6 +18,17 @@ function getOllamaModelOverrides(): Partial<Record<ModelTier, string>> | undefin
   return Object.keys(overrides).length > 0 ? overrides : undefined;
 }
 
+function getOpenAIModelOverrides(): Partial<Record<ModelTier, string>> | undefined {
+  const overrides: Partial<Record<ModelTier, string>> = {};
+
+  if (config.OPENAI_ROUTER_MODEL) overrides.ROUTER = config.OPENAI_ROUTER_MODEL;
+  if (config.OPENAI_AGENT_MODEL) overrides.AGENT = config.OPENAI_AGENT_MODEL;
+  if (config.OPENAI_WORK_MODEL) overrides.WORK = config.OPENAI_WORK_MODEL;
+  if (config.OPENAI_EMBEDDING_MODEL) overrides.EMBEDDING = config.OPENAI_EMBEDDING_MODEL;
+
+  return Object.keys(overrides).length > 0 ? overrides : undefined;
+}
+
 function buildSingleProvider(name: string, apiKey: string): LLMProvider {
   switch (name) {
     case 'gemini':
@@ -27,7 +38,11 @@ function buildSingleProvider(name: string, apiKey: string): LLMProvider {
       return new AnthropicProvider(apiKey);
     case 'openai':
       if (!apiKey) throw new Error('LLM_API_KEY is required for OpenAI provider');
-      return new OpenAIProvider(apiKey);
+      return new OpenAIProvider(
+        apiKey,
+        getOpenAIModelOverrides(),
+        config.OPENAI_BASE_URL || undefined,
+      );
     case 'openrouter':
       if (!apiKey) throw new Error('LLM_API_KEY is required for OpenRouter provider');
       return new OpenAIProvider(apiKey, {}, 'https://openrouter.ai/api/v1');

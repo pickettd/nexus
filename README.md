@@ -178,6 +178,11 @@ Each persona lives in `personas/` and can be customized. Import more from [agenc
 | `OLLAMA_AGENT_MODEL` | No | Ollama agent model override. Defaults to `qwen3:32b`. |
 | `OLLAMA_WORK_MODEL` | No | Ollama work model override. Defaults to `qwen3:32b`. |
 | `OLLAMA_EMBEDDING_MODEL` | No | Ollama embedding model override. Defaults to `nomic-embed-text`. |
+| `OPENAI_BASE_URL` | No | Base URL override when `LLM_PROVIDER=openai`. Useful for OpenAI-compatible backends (LiteLLM, vLLM, Ollama OpenAI-compat, etc.). |
+| `OPENAI_ROUTER_MODEL` | No | OpenAI router model override. Defaults to `gpt-4.1-mini`. |
+| `OPENAI_AGENT_MODEL` | No | OpenAI agent model override. Defaults to `gpt-4.1`. |
+| `OPENAI_WORK_MODEL` | No | OpenAI work model override. Defaults to `o3`. |
+| `OPENAI_EMBEDDING_MODEL` | No | OpenAI embedding model override. Defaults to `text-embedding-3-small`. |
 | `DATABASE_URL` | No | PostgreSQL connection string. Omit for embedded PGlite (zero-config). |
 | `EXECUTION_BACKEND` | No | `noop` (default), `claude-code`, `gemini-cli`, `codex-cli`, `openclaw`, `permaship` |
 | `EXECUTION_TIMEOUT_MS` | No | Execution timeout in ms. Defaults to `3600000` (1 hour). |
