@@ -150,7 +150,7 @@ export class OpenAIProvider implements LLMProvider {
 
     try {
       const response = await withRetry(
-        () => this.client.embeddings.create({ model, input: text }),
+        () => this.client.embeddings.create({ model, input: text, encoding_format: 'float' }),
         undefined,
         `openai.embedText[${model}]`,
       );
